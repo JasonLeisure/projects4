@@ -9,7 +9,8 @@ from .models import Conference, Location, State
 
 class LocationListEncoder(ModelEncoder):
     model = Location
-    properties = ["name"]
+    properties = ["name",
+                  "picture_url",]
 
 
 class LocationDetailEncoder(ModelEncoder):
@@ -21,6 +22,7 @@ class LocationDetailEncoder(ModelEncoder):
         "created",
         "updated",
         "picture_url",
+
     ]
 
     def get_extra_data(self, o):
@@ -221,6 +223,8 @@ def api_show_location(request, pk):
                 {"message": "Invalid state abbreviation"},
                 status=400,
             )
+        photo = get_photo(content["city"], content["state"].abbreviation)
+        content.update(photo)
         Location.objects.filter(id=pk).update(**content)
         location = Location.objects.get(id=pk)
         return JsonResponse(

@@ -16,13 +16,13 @@ function Nav(){
                             <a className="nav-link" id="nav-login" aria-current="page" href="login.html">Login</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" id="nav-loc" aria-current="page" href="new-location.html">New Location</a>
+                            <a className="nav-link d-none" id="nav-loc" aria-current="page" href="new-location.html">New Location</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" id="nav-con" aria-current="page" href="new-conference.html">New Conference</a>
+                            <a className="nav-link d-none" id="nav-con" aria-current="page" href="new-conference.html">New Conference</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link" id="nav-pre" aria-current="page" href="new-presentation.html">New Presentation</a>
+                            <a className="nav-link d-none" id="nav-pre" aria-current="page" href="new-presentation.html">New Presentation</a>
                         </li>
                         <li className="nav-item">
                             <a className="nav-link" id="nav-attend-con" aria-current="page" href="attend-conference.html">Attend Conference</a>

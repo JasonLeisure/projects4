@@ -1,11 +1,21 @@
 version: "3.7"
 services:
+  database:
+    image: postgres
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+      - ./database/setup:/docker-entrypoint-initdb.d
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES=monolith,attendees
+      - POSTGRES_PASSWORD=test-databases
+    ports:
+      - 15432:5432
   monolith:
     build:
       context: ./monolith
       dockerfile: ./Dockerfile.dev
     environment:
-      DATABASE_URL: "postgres://monolith:password@database:5432/monolith"
+      DATABASE_URL: "postgres://postgres:test-databases@database:5432/monolith"
       WAIT_HOSTS: database:5432, rabbitmq:5672
       WAIT_TIMEOUT: 180
       PEXELS_API_KEY: ${PEXELS_API_KEY}
@@ -18,6 +28,18 @@ services:
     depends_on:
       - rabbitmq
       - database
+  react-attendees:
+    image: node:latest
+    command: npm start
+    working_dir: /app
+    volumes:
+      - ./ghi/attendees:/app
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3001
+      - NODE_ENV=development
+    ports:
+      - "3001:3001"
   attendees_microservice:
     build:
       context: ./attendees_microservice
@@ -30,7 +52,7 @@ services:
       - rabbitmq
       - database
     environment:
-      DATABASE_URL: "postgres://attendees:password@database:5432/attendees"
+      DATABASE_URL: "postgres://postgres:test-databases@database:5432/attendees"
       WAIT_HOSTS: database:5432, rabbitmq:5672
       WAIT_TIMEOUT: 180
   attendees_conference_info:
@@ -42,7 +64,7 @@ services:
     depends_on:
       - monolith
     environment:
-      DATABASE_URL: "postgres://attendees:password@database:5432/attendees"
+      DATABASE_URL: "postgres://postgres:test-databases@database:5432/attendees"
   attendees_account_info:
     build:
       context: ./attendees_microservice
@@ -53,7 +75,7 @@ services:
       - rabbitmq
       - database
     environment:
-      DATABASE_URL: "postgres://attendees:password@database:5432/attendees"
+      DATABASE_URL: "postgres://postgres:test-databases@database:5432/attendees"
       WAIT_HOSTS: database:5432, rabbitmq:5672
       WAIT_TIMEOUT: 180
   presentation_workflow:
@@ -83,15 +105,3 @@ services:
       - ./ghi:/usr/share/nginx/html:ro
     ports:
       - "3000:80"
-  database:
-    image: postgres:14
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./database/setup:/docker-entrypoint-initdb.d
-    environment:
-      - POSTGRES_MULTIPLE_DATABASES=monolith,attendees
-      - POSTGRES_PASSWORD=test-databases
-    ports:
-      - 15432:5432
-volumes:
-  pgdata:

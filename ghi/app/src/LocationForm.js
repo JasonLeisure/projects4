@@ -37,11 +37,15 @@ function LocationForm() {
             //     }
             //     setStates(stateList);
 
-            setStates(
-                data.states.map(state => ({ "abbreviation": state.abbreviation, "name": state.name }))
-            )
-        }
+        //     setStates(
+        //         data.states.map(state => ({ "abbreviation": state.abbreviation, "name": state.name }))
+        //     )
+        // }
+        setStates(
+            data.states
+        )
     }
+}
     useEffect(() => {
         fetchData();
     }, []);

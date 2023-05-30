@@ -46,9 +46,10 @@ function ConferenceForm() {
         if (response.ok) {
             const data = await response.json();
 
-            setLocations(
-                data.locations.map(loc => ({ "id": loc.id, "name": loc.name }))
-            )
+            // setLocations(
+            //     data.locations.map(loc => ({ "id": loc.id, "name": loc.name }))
+            // )
+            setLocation(data.locations)
         }
     }
 
@@ -86,6 +87,12 @@ function ConferenceForm() {
             const newConf = await response.json();
             console.log(newConf);
 
+            setAtt('');
+            setPre('');
+            setDescription('');
+            setEndDate('');
+            setLocation('');
+            setName('');
         }
     }
 
